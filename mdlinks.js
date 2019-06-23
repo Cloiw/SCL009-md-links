@@ -1,6 +1,5 @@
 const fs = require('fs');
 const marked = require('marked');
-
 const FileHound = require('filehound');
 
 //leer archivos md de directorio
@@ -56,7 +55,6 @@ const isMd =  (text =>{
 
 
 
-
 // genera arreglo con informacion de todos los links de los archivos md del directorio
 const handleDirectory = (files =>{
   return new Promise((resolve, reject)=>{
@@ -69,15 +67,12 @@ const handleDirectory = (files =>{
           if(count == files.length){
             resolve(allLinks)
           }
-          
-          })
-          
-      });
-    
+        })
+      })
   })
-  
 })
 
+//
 const fff = (path=>{
 
   if(isMd(path)){
@@ -95,34 +90,52 @@ const fff = (path=>{
 
 
 
+
+
+
+
+
+
 const mdLinks = (path, options) =>{
+if(options.stats){
+  return statsLinks(path)
+}else{
 
-// if(options.stats && options.validate){
-  
-// }
-
-// if(options.stats){
-
-// }
-// if(options.validate){
-
-// }
-
-return fff(path)
-
+  return fff(path)}
 
 }
 
+
+
+
+
+
+const statsLinks = (path) =>{
+return new Promise((resolve, reject) => { 
+mdLinks(path,{}).then(links =>{
+resolve("Total:"+links.length)
+})
+})
+}
 
 
 let patha = process.argv[2]
-mdLinks(patha).then(algo=>{
-  console.log(algo)
-});
 
-
-const statsLinks = () =>{
-  if(isMd(path)){
+let options = {
+  stats: false,
+  validate: false,
 }
 
+process.argv.forEach(element =>{
+ if( element == "--stats"){
+   options.stats = true
+ }
+else if(element == "--validate"){
+  options.validate = true
 }
+})
+
+// mdLinks(patha,options).then(algo=>{
+//   console.log(algo)
+// });
+
