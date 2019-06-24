@@ -47,8 +47,6 @@ const isMd =  (text =>{
 
 
 
-//funcion para stats C:?''
-
 
 // console.log(readingDirect('/home/laboratoriad128/Escritorio/SCL009-md-links/'))
 // console.log(isMd("./prueba.md"))
@@ -72,9 +70,10 @@ const handleDirectory = (files =>{
   })
 })
 
-//
-const fff = (path=>{
 
+
+//entrega links si vienen de un md o de un directorio.
+const linksFileOrDirectory = (path=>{
   if(isMd(path)){
     return links(path)
   }else{
@@ -93,15 +92,13 @@ const fff = (path=>{
 
 
 
-
-
-
+//
 const mdLinks = (path, options) =>{
 if(options.stats){
   return statsLinks(path)
 }else{
 
-  return fff(path)}
+  return linksFileOrDirectory(path)}
 
 }
 
@@ -110,15 +107,21 @@ if(options.stats){
 
 
 
+
+//stats de cada link 
 const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
-mdLinks(path,{}).then(links =>{
-resolve("Total:"+links.length)
-})
-})
+  linksFileOrDirectory(path).then(links =>{
+    const unique = [...new Set(links.map(x=>x.href))]
+    resolve("Total:"+links.length+"\n"+
+      "Unique:"+unique.length)
+    })
+  })
 }
 
 
+
+/////////////////////////
 let patha = process.argv[2]
 
 let options = {
@@ -135,7 +138,8 @@ else if(element == "--validate"){
 }
 })
 
-// mdLinks(patha,options).then(algo=>{
-//   console.log(algo)
-// });
+mdLinks(patha,options).then(algo=>{
+  console.log(algo)
+});
+
 
