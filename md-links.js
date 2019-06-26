@@ -139,32 +139,58 @@ const statsAndValidateLinks = (path) =>{
 }
 
 // agrega "status" a cada link
-const validateLinks = (path) => {
-  return new Promise((resolve, reject) => {
-    linksFileOrDirectory(path).then(links =>{ 
-        let count = 0
-        let result = []
-        const linksLength = links.length
-          links.forEach(element =>{
-            fetch(element.href).then(res =>{
-              count++
-              element.status = res.status+" "+res.statusText
-              result.push(element)
+// const validateLinks = (path) => {
+//   return new Promise((resolve, reject) => {
+//     linksFileOrDirectory(path).then(links =>{ 
+//         let count = 0
+//         let result = []
+//         const linksLength = links.length
+//           links.forEach(element =>{
+//             fetch(element.href).then(res =>{
+//               count++
+//               element.status = res.status+" "+res.statusText
+//               result.push(element)
 
-              if(count == linksLength){
-              resolve(result)}
+//               if(count == linksLength){
+//               resolve(result)}
 
               
-            })
-              .catch((err)=>{
-                count++
-                element.status = err.code
-                result.push(element)
-            })
-          })
+//             })
+//               .catch((err)=>{
+//                 count++
+//                 element.status = err.code
+//                 result.push(element)
+//             })
+//           })
+//     })
+//   })
+// }
+
+
+const validateLinks = (path) =>{
+    return new Promise((resolve, reject) => {
+    linksFileOrDirectory(path).then(links =>{ 
+    
+    let shit = links.map(x=>{
+      
+      return fetch(x.href).then(res =>{
+          x.status = res.status+" "+res.statusText
+        }).catch((err)=>{
+          x.status = err.code
+        }) 
     })
+
+      Promise.all(shit).then(re=>{
+        resolve(links)
+      })
+      
+    })
+ 
+
   })
+
 }
+
 
 // const validateLinks = (path) => {
 
@@ -199,7 +225,7 @@ const validateLinks = (path) => {
 const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
   linksFileOrDirectory(path).then(links =>{
-    const unique = links.map(x=>x.href)
+    const unique = [...new Set(links.map(x=>x.href))]
     resolve("Total:"+links.length+"\n"+
       "Unique:"+unique.length)
     })
