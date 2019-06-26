@@ -107,34 +107,81 @@ if(options.stats){
 }
 
 
-// const statsAndValidateLinks = (path) =>{
-//   return new Promise((resolve,reject)=>{
-//     const validateLinksResult = validateLinks(path);
-//     let brokenLinks = [0,2]
-//     let result = validateLinks.map(a=>a);
-//     resolve(result)
+const statsAndValidateLinks = (path) =>{
+  return new Promise((resolve,reject)=>{
+    validateLinks(path).then(links=>{
+      const statusLinks = links.map(x=>x.status)
+      let okLinks = statusLinks.toString().match(/200/g).length
+      const totalLinks = links.length
+      let brokenLinks = 0
+
+      if(brokenLinks != null){
+        brokenLinks = brokenLinks.length
+      }else{
+        brokenLinks =  0
+      }
+      
+      brokenLinks = totalLinks-okLinks
+      
+
+      resolve(
+        "Total Links:"+totalLinks+"\n"+
+        "Broken Links:"+brokenLinks)
+    })
+    
+    
+    
+    
     
     
 
-//   })
-// }
+  })
+}
 
-//agrega "status" a cada link
+// agrega "status" a cada link
+const validateLinks = (path) => {
+  return new Promise((resolve, reject) => {
+    linksFileOrDirectory(path).then(links =>{ 
+        let count = 0
+        let result = []
+        const linksLength = links.length
+          links.forEach(element =>{
+            fetch(element.href).then(res =>{
+              count++
+              element.status = res.status+" "+res.statusText
+              result.push(element)
+
+              if(count == linksLength){
+              resolve(result)}
+
+              
+            })
+              .catch((err)=>{
+                count++
+                element.status = err.code
+                result.push(element)
+            })
+          })
+    })
+  })
+}
+
 // const validateLinks = (path) => {
+
 //   return new Promise((resolve, reject) => {
 //     linksFileOrDirectory(path).then(links =>{ 
-//         let count = 0
-//         let result = []
-//         const linksLength = links.length
-//           links.forEach(element =>{
-//             fetch(element.href).then(res =>{
-//               count++
-//               element.status = res.status+" "+res.statusText
-//               result.push(element)
+//         console.log(links.map(links.href))
+//         links.map(link=>{
+//            fetch(link.href).then(res =>{
+//               link.status = res.status+" "+res.statusText
+//               resolve(link)
+//         })
+      
+          
 
-//               if(count == linksLength){
-//               resolve(result)}
-//             })
+           
+              
+            
 //           })
 //     })
 //   })
@@ -142,54 +189,7 @@ if(options.stats){
 
 
 
-
-
-// const validateLinks = (path) =>{
-//   return new Promise((resolve, reject) => {
-  
-//     linksFileOrDirectory(path).then(links =>{
       
-//       let nuevoarray = [];
-//       links.forEach(element =>{
-        
-//         fetch(element.href).then(res =>
-//           nuevoarray.push(res.statusText)
-//           )
-
-         
-          
-   
-          
-//         }) 
-//         resolve(nuevoarray)
-  
-//      })
-     
-//   })
-// }
-
-// [element.file+" "+element.href+" "+res.status+" "+res.statusText]
-      // element["Status"] = res.status;
-    // links.
-    // res.status+" "+res.statusText)
-    
-
-
-    
-//   let pat = path;
-//   
-//   .then(body => console.log(body));
-//   return new Promise((resolve, reject) => { 
-//     linksFileOrDirectory(path).then(links =>{
-//   resolve(
-
-    
-    
-//     links.map(obj=> ({ ...obj, status: 'ok' })))
-// })
-//   })}
-
-
 
 
 
