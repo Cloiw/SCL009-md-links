@@ -5,9 +5,17 @@ const fetch = require('node-fetch');
 
 //leer archivos md de directorio
 const readingDirect = (path =>{
-const files = FileHound.create().paths(path).ext('md').find();
-// files.then(console.log);
-return files;
+  return new Promise((resolve,reject)=>{
+    FileHound.create().paths(path).ext('md').find().then(files=>{
+      resolve(files)
+    }).catch(err=>{
+      console.log("Error: "+err.message)
+    })
+    
+    
+  })
+
+
 })
 
 
@@ -47,13 +55,6 @@ const isMd =  (text =>{
 })
 
 
-
-
-// console.log(readingDirect('/home/laboratoriad128/Escritorio/SCL009-md-links/'))
-// console.log(isMd("./prueba.md"))
-
-
-
 // genera arreglo con informacion de todos los links de los archivos md del directorio
 const handleDirectory = (files =>{
   return new Promise((resolve, reject)=>{
@@ -74,6 +75,21 @@ const handleDirectory = (files =>{
 
 
 //entrega links si vienen de un md o de un directorio.
+// const linksFileOrDirectory = (path)=>{
+//   if(isMd(path)){
+//     return links(path)
+//   }else{
+//     return new Promise((resolve, reject) => { 
+//         readingDirect(path).then(files =>{
+//         handleDirectory(files).then(links=>{
+//           resolve(links)
+//         })
+//       })
+//     })
+//   }
+// }
+
+
 const linksFileOrDirectory = (path)=>{
   if(isMd(path)){
     return links(path)
@@ -111,30 +127,22 @@ const statsAndValidateLinks = (path) =>{
   return new Promise((resolve,reject)=>{
     validateLinks(path).then(links=>{
       const statusLinks = links.map(x=>x.status)
-      let okLinks = statusLinks.toString().match(/200/g).length
+      let okLinks = statusLinks.toString().match(/200/g)
       const totalLinks = links.length
       let brokenLinks = 0
 
-      if(brokenLinks != null){
-        brokenLinks = brokenLinks.length
+      if(okLinks != null){
+        okLinks = okLinks.length
       }else{
-        brokenLinks =  0
+        okLinks =  0
       }
       
       brokenLinks = totalLinks-okLinks
-      
-
       resolve(
-        "Total Links:"+totalLinks+"\n"+
-        "Broken Links:"+brokenLinks)
+        "Total Links: "+totalLinks+"\n"+
+        "Ok Links: "+okLinks+"\n"+
+        "Broken Links: "+brokenLinks)
     })
-    
-    
-    
-    
-    
-    
-
   })
 }
 
@@ -171,7 +179,7 @@ const validateLinks = (path) =>{
     return new Promise((resolve, reject) => {
     linksFileOrDirectory(path).then(links =>{ 
     
-    let shit = links.map(x=>{
+    let fetchLinks = links.map(x=>{ // promesas del fetch
       
       return fetch(x.href).then(res =>{
           x.status = res.status+" "+res.statusText
@@ -180,7 +188,7 @@ const validateLinks = (path) =>{
         }) 
     })
 
-      Promise.all(shit).then(re=>{
+      Promise.all(fetchLinks).then(res=>{
         resolve(links)
       })
       
@@ -192,42 +200,15 @@ const validateLinks = (path) =>{
 }
 
 
-// const validateLinks = (path) => {
-
-//   return new Promise((resolve, reject) => {
-//     linksFileOrDirectory(path).then(links =>{ 
-//         console.log(links.map(links.href))
-//         links.map(link=>{
-//            fetch(link.href).then(res =>{
-//               link.status = res.status+" "+res.statusText
-//               resolve(link)
-//         })
-      
-          
-
-           
-              
-            
-//           })
-//     })
-//   })
-// }
-
-
-
-      
-
-
-
 
 
 //stats de cada link 
 const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
   linksFileOrDirectory(path).then(links =>{
-    const unique = [...new Set(links.map(x=>x.href))]
-    resolve("Total:"+links.length+"\n"+
-      "Unique:"+unique.length)
+    const unique = new Set(links.map(x=>x.href))
+    resolve("Total Links:"+links.length+"\n"+
+      "Unique Links:"+unique.size)
     })
   })
 }
@@ -250,6 +231,11 @@ if(element == "--validate"){
   options.validate = true
 }
 })
+
+if((!options.stats && !options.validate && process.argv.length > 3)||(options.stats && !options.validate && process.argv.length > 4)
+||(!options.stats && options.validate && process.argv.lenght>4)||(options.stats && options.validate && process.argv.lenght>5)){
+   console.log("jnk")
+  return}
 
 mdLinks(path,options).then(algo=>{
   console.log(algo)
