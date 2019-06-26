@@ -11,11 +11,7 @@ const readingDirect = (path =>{
     }).catch(err=>{
       console.log("Error: "+err.message)
     })
-    
-    
   })
-
-
 })
 
 
@@ -73,23 +69,7 @@ const handleDirectory = (files =>{
 })
 
 
-
 //entrega links si vienen de un md o de un directorio.
-// const linksFileOrDirectory = (path)=>{
-//   if(isMd(path)){
-//     return links(path)
-//   }else{
-//     return new Promise((resolve, reject) => { 
-//         readingDirect(path).then(files =>{
-//         handleDirectory(files).then(links=>{
-//           resolve(links)
-//         })
-//       })
-//     })
-//   }
-// }
-
-
 const linksFileOrDirectory = (path)=>{
   if(isMd(path)){
     return links(path)
@@ -122,7 +102,7 @@ if(options.stats){
   return linksFileOrDirectory(path)}
 }
 
-
+//entrega la cantidad de links totales, links con status OK y links rotos.
 const statsAndValidateLinks = (path) =>{
   return new Promise((resolve,reject)=>{
     validateLinks(path).then(links=>{
@@ -146,47 +126,20 @@ const statsAndValidateLinks = (path) =>{
   })
 }
 
-// agrega "status" a cada link
-// const validateLinks = (path) => {
-//   return new Promise((resolve, reject) => {
-//     linksFileOrDirectory(path).then(links =>{ 
-//         let count = 0
-//         let result = []
-//         const linksLength = links.length
-//           links.forEach(element =>{
-//             fetch(element.href).then(res =>{
-//               count++
-//               element.status = res.status+" "+res.statusText
-//               result.push(element)
 
-//               if(count == linksLength){
-//               resolve(result)}
-
-              
-//             })
-//               .catch((err)=>{
-//                 count++
-//                 element.status = err.code
-//                 result.push(element)
-//             })
-//           })
-//     })
-//   })
-// }
-
-
+//valida cada link y agrega "status" a cada uno segun respuesta del fetch
 const validateLinks = (path) =>{
     return new Promise((resolve, reject) => {
     linksFileOrDirectory(path).then(links =>{ 
     
-    let fetchLinks = links.map(x=>{ // promesas del fetch
-      
-      return fetch(x.href).then(res =>{
-          x.status = res.status+" "+res.statusText
-        }).catch((err)=>{
-          x.status = err.code
-        }) 
-    })
+      let fetchLinks = links.map(x=>{ // promesas del fetch
+        
+        return fetch(x.href).then(res =>{
+            x.status = res.status+" "+res.statusText
+          }).catch((err)=>{
+            x.status = err.code
+          }) 
+      })
 
       Promise.all(fetchLinks).then(res=>{
         resolve(links)
@@ -194,7 +147,6 @@ const validateLinks = (path) =>{
       
     })
  
-
   })
 
 }
@@ -215,33 +167,33 @@ return new Promise((resolve, reject) => {
 
 
 
-/////////////////////////
-let path = process.argv[2]
+///////////////////////
+// let path = process.argv[2]
 
-let options = {
-  stats: false,
-  validate: false,
-}
-
-process.argv.forEach(element =>{
- if( element == "--stats"){
-   options.stats = true
- }
-if(element == "--validate"){
-  options.validate = true
-}
-})
-
-if((!options.stats && !options.validate && process.argv.length > 3)||(options.stats && !options.validate && process.argv.length > 4)
-||(!options.stats && options.validate && process.argv.lenght>4)||(options.stats && options.validate && process.argv.lenght>5)){
-   console.log("jnk")
-  return}
-
-mdLinks(path,options).then(algo=>{
-  console.log(algo)
-});
-
-
-// module.exports = {
-//   mdLinks
+// let options = {
+//   stats: false,
+//   validate: false,
 // }
+
+// process.argv.forEach(element =>{
+//  if( element == "--stats"){
+//    options.stats = true
+//  }
+// if(element == "--validate"){
+//   options.validate = true
+// }
+// })
+
+// if((!options.stats && !options.validate && process.argv.length > 3)||(options.stats && !options.validate && process.argv.length > 4)
+// ||(!options.stats && options.validate && process.argv.lenght>4)||(options.stats && options.validate && process.argv.lenght>5)){
+//    console.log("jnk")
+//   return}
+
+// mdLinks(path,options).then(algo=>{
+//   console.log(algo)
+// });
+
+
+module.exports = {
+  mdLinks
+}
