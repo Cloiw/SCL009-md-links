@@ -52,7 +52,7 @@ const isMd =  (text =>{
 
 
 // genera arreglo con informacion de todos los links de los archivos md del directorio
-const handleDirectory = (files =>{
+const handleDirectory = (files) =>{
   return new Promise((resolve, reject)=>{
     let count = 0;
     let allLinks = []
@@ -66,7 +66,7 @@ const handleDirectory = (files =>{
         })
       })
   })
-})
+}
 
 
 //entrega links si vienen de un md o de un directorio.
@@ -132,7 +132,7 @@ const validateLinks = (path) =>{
     return new Promise((resolve, reject) => {
     linksFileOrDirectory(path).then(links =>{ 
     
-      let fetchLinks = links.map(x=>{ // promesas del fetch
+      let fetchLinks = links.map(x=>{ // 
         
         return fetch(x.href).then(res =>{
             x.status = res.status+" "+res.statusText
@@ -158,9 +158,9 @@ const validateLinks = (path) =>{
 const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
   linksFileOrDirectory(path).then(links =>{
-    const unique = new Set(links.map(x=>x.href))
+    const uniqueLinks = new Set(links.map(x=>x.href))
     resolve("Total Links:"+links.length+"\n"+
-      "Unique Links:"+unique.size)
+      "Unique Links:"+uniqueLinks.size)
     })
   })
 }
@@ -168,21 +168,21 @@ return new Promise((resolve, reject) => {
 
 
 ///////////////////////
-// let path = process.argv[2]
+let path = process.argv[2]
 
-// let options = {
-//   stats: false,
-//   validate: false,
-// }
+let options = {
+  stats: false,
+  validate: false,
+}
 
-// process.argv.forEach(element =>{
-//  if( element == "--stats"){
-//    options.stats = true
-//  }
-// if(element == "--validate"){
-//   options.validate = true
-// }
-// })
+process.argv.forEach(element =>{
+ if( element == "--stats"){
+   options.stats = true
+ }
+if(element == "--validate"){
+  options.validate = true
+}
+})
 
 // if((!options.stats && !options.validate && process.argv.length > 3)||(options.stats && !options.validate && process.argv.length > 4)
 // ||(!options.stats && options.validate && process.argv.lenght>4)||(options.stats && options.validate && process.argv.lenght>5)){
@@ -191,9 +191,11 @@ return new Promise((resolve, reject) => {
 
 // mdLinks(path,options).then(algo=>{
 //   console.log(algo)
-// });
+//   }).catch(err=>{
+//     console.log(err);
+// })
 
 
 module.exports = {
-  mdLinks
+  mdLinks 
 }

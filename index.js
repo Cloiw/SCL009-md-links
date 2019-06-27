@@ -1,15 +1,6 @@
-const mdLinks = require('md-links.js');
+#!/usr/bin/env node
+const mdLinks = require('./md-links.js');
 
-
-// md.mdLinks(path,options).then(result=>{
-//     console.log(result)
-//   });
-
-
-
-//process.argv --options blablalbalba 
-
-///////////////////////
 let path = process.argv[2]
 
 let options = {
@@ -31,6 +22,6 @@ if(element == "--validate"){
 //    console.log("jnk")
 //   return}
 
-mdLinks(path,options).then(result=>{
-  console.log(result)
+mdLinks.mdLinks(path,options).then(res=>{
+  console.log(res)
 });
