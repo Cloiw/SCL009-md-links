@@ -7,36 +7,54 @@ const fetch = require('node-fetch');
 const readingDirect = (path =>{
   return new Promise((resolve,reject)=>{
     FileHound.create().paths(path).ext('md').find().then(files=>{
-      resolve(files)
+      if(files.length != 0){
+      resolve(files)}
+      reject(new Error("No se encontraron archivos .md dentro de "+path))
     }).catch(err=>{
-      console.log("Error: "+err.message)
+      reject(new Error("Ruta no valida"))
     })
   })
 })
 
 
-//obtener links de un archivo
-const links = (path =>{
-  return new Promise((resolve, reject) => {
+
+//leer archivo.md
+const readMd = (path => {
+  return new Promise((resolve,reject)=>{
     fs.readFile( path,'utf8', (err, data) => {
       if (err){
-        throw err;
-      } 
-    let links = [];
-    const renderer = new marked.Renderer();
-    
-    renderer.link = function(href,title,text){
-      if(!href.startsWith("mailto:"))
-        links.push({
-          href:href,
-          text:text,
-          file:path})
-      } 
-
-      marked(data,{renderer:renderer}); 
-      resolve(links)
-      
+        reject(new Error("No se encontro el archivo "+path))
+      }
+      resolve(data)
     })
+  })
+})
+
+//obtener links de un archivo .md
+const links = (path =>{
+  return new Promise((resolve, reject)=>{
+    
+    readMd(path).then(res =>{
+      
+      let links = [];
+      const renderer = new marked.Renderer();
+      
+      renderer.link = function(href,title,text){
+        
+        if(!href.startsWith("mailto:"))
+          links.push({
+            href:href,
+            text:text,
+            file:path})
+        } 
+
+        marked(res,{renderer:renderer}); 
+        
+        resolve(links)
+        
+    }).catch(err=>{
+      reject(err)
+      })
   })
 })
 
@@ -63,6 +81,8 @@ const handleDirectory = (files) =>{
           if(count == files.length){
             resolve(allLinks)
           }
+        }).catch(err=>{
+          reject(err)
         })
       })
   })
@@ -79,28 +99,14 @@ const linksFileOrDirectory = (path)=>{
         handleDirectory(files).then(links=>{
           resolve(links)
         })
+      }).catch(err =>{
+        reject(new Error(err.message))
       })
     })
   }
 }
 
 
-
-
-
-
-//
-const mdLinks = (path, options) =>{
-if(options.stats && options.validate){
-  return statsAndValidateLinks(path)
-}  
-if(options.stats){
-  return statsLinks(path)
-}if(options.validate){
-  return validateLinks(path)
-}else{
-  return linksFileOrDirectory(path)}
-}
 
 //entrega la cantidad de links totales, links con status OK y links rotos.
 const statsAndValidateLinks = (path) =>{
@@ -167,22 +173,19 @@ return new Promise((resolve, reject) => {
 
 
 
-///////////////////////
-let path = process.argv[2]
 
-let options = {
-  stats: false,
-  validate: false,
-}
-
-process.argv.forEach(element =>{
- if( element == "--stats"){
-   options.stats = true
- }
-if(element == "--validate"){
-  options.validate = true
-}
-})
+//
+const mdLinks = (path, options) =>{
+  if(options.stats && options.validate){
+    return statsAndValidateLinks(path)
+  }  
+  if(options.stats){
+    return statsLinks(path)
+  }if(options.validate){
+    return validateLinks(path)
+  }else{
+    return linksFileOrDirectory(path)}
+  }
 
 // if((!options.stats && !options.validate && process.argv.length > 3)||(options.stats && !options.validate && process.argv.length > 4)
 // ||(!options.stats && options.validate && process.argv.lenght>4)||(options.stats && options.validate && process.argv.lenght>5)){

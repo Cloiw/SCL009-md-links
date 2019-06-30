@@ -2,14 +2,20 @@
   "name": "md-links",
   "version": "0.1.0",
   "dependencies": {
+    "eslint": "^6.0.1",
+    "eslint-plugin-jest": "^22.7.1",
     "filehound": "^1.17.0",
     "jest": "^24.8.0",
     "marked": "^0.6.2",
     "node-fetch": "^2.6.0"
   },
   "scripts": {
-    "test": "jest --coverage"},
-    "bin": {
-      "outside": "bin/outside"
-    }
+    "test": "jest --coverage",
+    "eslint": "eslint --ext.js /test",
+    "pre-test": "npm run eslint"
+  },
+  "bin": {
+    "md-links": "index.js"
+  }
 }
+
