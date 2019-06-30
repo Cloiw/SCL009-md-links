@@ -28,14 +28,16 @@ test("mdLinks, deberia entregar un array con objetos de cada link ", async () =>
 });
 
 
+//error de archivo no valido
+test("mdLinks, deberia entregar un mensaje de error al no encontrar un archivo.md valido", async () =>{
+await expect(mdLinks.mdLinks("test/md-files-test/test-file-3.md",{validate:false,stats:false})).rejects.toMatchObject({
+    message: 'No se encontro el archivo test/md-files-test/test-file-3.md'
+  })
+})
 
-// it('tests error with async/await', async () => {
-  
-//   try {
-//     await mdLinks.mdLinks("test/md-files-test/test-file-2.md",{validate:true,stats:true});
-//   } catch (e) {
-//     expect(e).toEqual({
-//       error :"Error: ENOENT: no such file or directory, stat 'README.txt'" , 
-//     });
-//   }
-// });
+//error de ruta no valida
+test("mdLinks, deberia entregar un mensaje de error al no encontrar una ruta valida", async () =>{
+  await expect(mdLinks.mdLinks("test/md-files-test/rutanovalida",{validate:false,stats:false})).rejects.toMatchObject({
+      message: 'Ruta no valida'
+  })
+})

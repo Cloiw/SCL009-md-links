@@ -30,8 +30,12 @@ const readMd = (path => {
   })
 })
 
+
+
+
+
 //obtener links de un archivo .md
-const links = (path =>{
+const Getlinks = (path =>{
   return new Promise((resolve, reject)=>{
     
     readMd(path).then(res =>{
@@ -75,7 +79,7 @@ const handleDirectory = (files) =>{
     let count = 0;
     let allLinks = []
       files.forEach(element => {
-        links(element).then(singleLink =>{
+        Getlinks(element).then(singleLink =>{
           count++
           allLinks = allLinks.concat(singleLink)
           if(count == files.length){
@@ -92,7 +96,7 @@ const handleDirectory = (files) =>{
 //entrega links si vienen de un md o de un directorio.
 const linksFileOrDirectory = (path)=>{
   if(isMd(path)){
-    return links(path)
+    return Getlinks(path)
   }else{
     return new Promise((resolve, reject) => { 
         readingDirect(path).then(files =>{
@@ -128,6 +132,8 @@ const statsAndValidateLinks = (path) =>{
         "Total Links: "+totalLinks+"\n"+
         "Ok Links: "+okLinks+"\n"+
         "Broken Links: "+brokenLinks)
+    }).catch(err=>{
+      reject(err)
     })
   })
 }
@@ -151,6 +157,8 @@ const validateLinks = (path) =>{
         resolve(links)
       })
       
+    }).catch(err=>{
+      reject(err)
     })
  
   })
@@ -167,7 +175,9 @@ return new Promise((resolve, reject) => {
     const uniqueLinks = new Set(links.map(x=>x.href))
     resolve("Total Links:"+links.length+"\n"+
       "Unique Links:"+uniqueLinks.size)
-    })
+    }).catch(err=>{
+    reject(err)
+  })
   })
 }
 
@@ -187,16 +197,6 @@ const mdLinks = (path, options) =>{
     return linksFileOrDirectory(path)}
   }
 
-// if((!options.stats && !options.validate && process.argv.length > 3)||(options.stats && !options.validate && process.argv.length > 4)
-// ||(!options.stats && options.validate && process.argv.lenght>4)||(options.stats && options.validate && process.argv.lenght>5)){
-//    console.log("jnk")
-//   return}
-
-// mdLinks(path,options).then(algo=>{
-//   console.log(algo)
-//   }).catch(err=>{
-//     console.log(err);
-// })
 
 
 module.exports = {
