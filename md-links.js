@@ -186,6 +186,12 @@ return new Promise((resolve, reject) => {
 
 //
 const mdLinks = (path, options) =>{
+
+  if(!path || !options){
+    return new Promise((resolve,reject)=>{
+      reject(new Error ("Faltan argumentos."))
+    })
+  }
   if(options.stats && options.validate){
     return statsAndValidateLinks(path)
   }  
