@@ -20,7 +20,7 @@
     "pretest": "npm run eslint"
   },
   "bin": {
-    "md-links": "index.js"
+    "md-links": "./index.js"
   },
   "repository": {
     "type": "git",
