@@ -1,6 +1,11 @@
 {
-  "name": "md-links",
+  "name": "cloiw-md-links",
   "version": "0.1.0",
+  "description": "Markdown project",
+  "keywords":["md-links","markdown","links",".md"],
+  "homepage": "https://github.com/Cloiw/SCL009-md-links#readme",
+  "license": "ISC",
+  "author": "Claudia Sirvent",
   "dependencies": {
     "eslint": "^6.0.1",
     "eslint-plugin-jest": "^22.7.1",
@@ -17,7 +22,9 @@
   "bin": {
     "md-links": "index.js"
   },
-  "author": "Claudia Sirvent",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cloiw/SCL009-md-links.git"
+  }
 }
 
