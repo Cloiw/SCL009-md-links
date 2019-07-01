@@ -35,7 +35,7 @@ const readMd = (path => {
 
 
 //obtener links de un archivo .md
-const Getlinks = (path =>{
+const getLinks = (path =>{
   return new Promise((resolve, reject)=>{
     
     readMd(path).then(res =>{
@@ -79,7 +79,7 @@ const handleDirectory = (files) =>{
     let count = 0;
     let allLinks = []
       files.forEach(element => {
-        Getlinks(element).then(singleLink =>{
+        getLinks(element).then(singleLink =>{
           count++
           allLinks = allLinks.concat(singleLink)
           if(count == files.length){
@@ -96,7 +96,7 @@ const handleDirectory = (files) =>{
 //entrega links si vienen de un md o de un directorio.
 const linksFileOrDirectory = (path)=>{
   if(isMd(path)){
-    return Getlinks(path)
+    return getLinks(path)
   }else{
     return new Promise((resolve, reject) => { 
         readingDirect(path).then(files =>{
