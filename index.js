@@ -17,11 +17,6 @@ if(element == "--validate"){
 }
 })
 
-// if((!options.stats && !options.validate && process.argv.length > 3)||(options.stats && !options.validate && process.argv.length > 4)
-// ||(!options.stats && options.validate && process.argv.lenght>4)||(options.stats && options.validate && process.argv.lenght>5)){
-//    console.log("jnk")
-//   return}
-
 mdLinks.mdLinks(path,options).then(res=>{
   console.log(res)
 }).catch(err=>{
