@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/cloiw-md-links.svg)](https://badge.fury.io/js/cloiw-md-links)
 [![Build Status](https://travis-ci.org/Cloiw/SCL009-md-links.svg?branch=master)](https://travis-ci.org/Cloiw/SCL009-md-links)
 
 # Markdown Links
@@ -22,8 +23,9 @@ algunas estadísticas.
 ## Instrucciones
 
 Para instalar utilizar el siguiente comando en la terminal: 
-
+```sh
 npm install cloiw-md-links
+```
 
 
 
@@ -37,17 +39,34 @@ npm install cloiw-md-links
 
 ##### Argumentos
 
-- `path`: Ruta absoluta o relativa al archivo o directorio. 
+- `path`: Ruta absoluta o relativa al archivo o directorio.
+
 - `options`: Un objeto con las siguientes propiedades:
   * `validate`: Booleano que determina si se desea validar los links
     encontrados.
   * `stats`: Booleano que determina si se desea ver estadisticas de los links.
 
+##### Valor de retorno
+La función retorna una promesa (Promise) que resuelve a un arreglo (Array) de objetos (Object), donde cada objeto representa un link y contiene las siguientes propiedades:
+
+- href: URL encontrada.
+- text: Texto que aparecía dentro del link
+- file: Ruta del archivo donde se encontró el link.
+
 ```sh
-  const mdLinks = require('cloiw-md-links');
+const mdLinks = require('cloiw-md-links');
+
+
+mdLinks.mdLinks('./test_folder')
+  .then(res => {
+    // => [{ href, text, file }]
+  }).catch(err=>{
+  console.log(err)
+})
+
 
 mdLinks.mdLinks('./test_folder',{validate:false,stats:true}).then(res => {
-    console.log(res);
+   // => Total Links: Unique Links: ;
 }).catch(err=>{
   console.log(err)
 })
@@ -117,4 +136,9 @@ Total Links: 3
 Ok Links: 3
 Broken Links: 0
 ```
+
+
+
+### Planificación
+[Trello](https://trello.com/b/VDuDqwdZ/md-links) 
 
