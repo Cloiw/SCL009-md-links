@@ -33,6 +33,7 @@ npm install cloiw-md-links
 
 #### `mdLinks(path, options)`
 
+
 ##### Argumentos
 
 - `path`: Ruta absoluta o relativa al archivo o directorio. 
@@ -41,6 +42,15 @@ npm install cloiw-md-links
     encontrados.
   * `stats`: Booleano que determina si se desea ver estadisticas de los links.
 
+```sh
+  const mdLinks = require('cloiw-md-links');
+
+mdLinks.mdLinks('./test_folder',{validate:false,stats:true}).then(res => {
+    console.log(res);
+}).catch(err=>{
+  console.log(err)
+})
+```
 
 ### CLI (Command Line Interface - Interfaz de Línea de Comando)
 
