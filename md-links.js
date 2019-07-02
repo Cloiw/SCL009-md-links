@@ -4,7 +4,7 @@ const FileHound = require('filehound');
 const fetch = require('node-fetch');
 
 //leer archivos md de directorio
-const readingDirect = (path =>{
+const readingDirectory = (path =>{
   return new Promise((resolve,reject)=>{
     FileHound.create().paths(path).ext('md').find().then(files=>{
       if(files.length != 0){
@@ -80,12 +80,12 @@ const handleDirectory = (files) =>{
   })
 }
 //entrega links si vienen de un md o de un directorio.
-const linksFileOrDirectory = (path)=>{
+const fileOrDirectoryLinks = (path)=>{
   if(isMd(path)){
     return getLinks(path)
   }else{
     return new Promise((resolve, reject) => { 
-      readingDirect(path).then(files =>{
+      readingDirectory(path).then(files =>{
         handleDirectory(files).then(links=>{
           resolve(links)
         })
@@ -123,7 +123,7 @@ const statsAndValidateLinks = (path) =>{
 //valida cada link y agrega "status" a cada uno segun respuesta del fetch
 const validateLinks = (path) =>{
   return new Promise((resolve, reject) => {
-    linksFileOrDirectory(path).then(links =>{ 
+    fileOrDirectoryLinks(path).then(links =>{ 
     
       let fetchLinks = links.map(x=>{  
         
@@ -146,7 +146,7 @@ const validateLinks = (path) =>{
 //stats de cada link 
 const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
-  linksFileOrDirectory(path).then(links =>{
+  fileOrDirectoryLinks(path).then(links =>{
     const uniqueLinks = new Set(links.map(x=>x.href))
     resolve("Total Links:"+links.length+"\n"+
       "Unique Links:"+uniqueLinks.size)
@@ -171,7 +171,7 @@ const mdLinks = (path, options) =>{
   }if(options.validate){
     return validateLinks(path)
   }else{
-    return linksFileOrDirectory(path)}
+    return fileOrDirectoryLinks(path)}
   }
 
 module.exports = {
