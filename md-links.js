@@ -29,28 +29,21 @@ const readMd = (path => {
     })
   })
 })
-
-
-
-
-
 //obtener links de un archivo .md
 const getLinks = (path =>{
   return new Promise((resolve, reject)=>{
-    
     readMd(path).then(res =>{
-      
       let links = [];
       const renderer = new marked.Renderer();
-      
       renderer.link = function(href,title,text){
-        
-        if(!href.startsWith("mailto:"))
+
+        if(!href.startsWith("mailto:")){
           links.push({
             href:href,
             text:text,
             file:path})
-        } 
+        }
+      } 
 
         marked(res,{renderer:renderer}); 
         
@@ -61,9 +54,6 @@ const getLinks = (path =>{
       })
   })
 })
-
-
-
 // true si el archivo es .md
 const isMd =  (text =>{
   if(text.slice(-3)== ".md"){
@@ -71,35 +61,31 @@ const isMd =  (text =>{
   }
   return false;
 })
-
-
 // genera arreglo con informacion de todos los links de los archivos md del directorio
 const handleDirectory = (files) =>{
   return new Promise((resolve, reject)=>{
     let count = 0;
     let allLinks = []
-      files.forEach(element => {
-        getLinks(element).then(singleLink =>{
-          count++
-          allLinks = allLinks.concat(singleLink)
-          if(count == files.length){
-            resolve(allLinks)
-          }
-        }).catch(err=>{
+    files.forEach(element => {
+      getLinks(element).then(singleLink =>{
+        count++
+        allLinks = allLinks.concat(singleLink)
+        if(count == files.length){
+          resolve(allLinks)
+        }
+      }).catch(err=>{
           reject(err)
         })
-      })
+    })
   })
 }
-
-
 //entrega links si vienen de un md o de un directorio.
 const linksFileOrDirectory = (path)=>{
   if(isMd(path)){
     return getLinks(path)
   }else{
     return new Promise((resolve, reject) => { 
-        readingDirect(path).then(files =>{
+      readingDirect(path).then(files =>{
         handleDirectory(files).then(links=>{
           resolve(links)
         })
@@ -109,9 +95,6 @@ const linksFileOrDirectory = (path)=>{
     })
   }
 }
-
-
-
 //entrega la cantidad de links totales, links con status OK y links rotos.
 const statsAndValidateLinks = (path) =>{
   return new Promise((resolve,reject)=>{
@@ -137,14 +120,12 @@ const statsAndValidateLinks = (path) =>{
     })
   })
 }
-
-
 //valida cada link y agrega "status" a cada uno segun respuesta del fetch
 const validateLinks = (path) =>{
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     linksFileOrDirectory(path).then(links =>{ 
     
-      let fetchLinks = links.map(x=>{ // 
+      let fetchLinks = links.map(x=>{  
         
         return fetch(x.href).then(res =>{
             x.status = res.status+" "+res.statusText
@@ -152,7 +133,7 @@ const validateLinks = (path) =>{
             x.status = err.code
           }) 
       })
-
+      
       Promise.all(fetchLinks).then(res=>{
         resolve(links)
       })
@@ -160,14 +141,8 @@ const validateLinks = (path) =>{
     }).catch(err=>{
       reject(err)
     })
- 
   })
-
 }
-
-
-
-
 //stats de cada link 
 const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
@@ -176,20 +151,16 @@ return new Promise((resolve, reject) => {
     resolve("Total Links:"+links.length+"\n"+
       "Unique Links:"+uniqueLinks.size)
     }).catch(err=>{
-    reject(err)
-  })
+      reject(err)
+    })
   })
 }
-
-
-
-
 //
 const mdLinks = (path, options) =>{
 
   if(!path || !options){
     return new Promise((resolve,reject)=>{
-      reject(new Error ("Faltan argumentos."))
+      reject(new Error ("Faltan argumentos"))
     })
   }
   if(options.stats && options.validate){
@@ -202,8 +173,6 @@ const mdLinks = (path, options) =>{
   }else{
     return linksFileOrDirectory(path)}
   }
-
-
 
 module.exports = {
   mdLinks 

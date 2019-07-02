@@ -1,6 +1,7 @@
 [![npm version](https://badge.fury.io/js/cloiw-md-links.svg)](https://badge.fury.io/js/cloiw-md-links)
 [![Build Status](https://travis-ci.org/Cloiw/SCL009-md-links.svg?branch=master)](https://travis-ci.org/Cloiw/SCL009-md-links)
 
+
 # Markdown Links
 
 [Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado
@@ -57,7 +58,7 @@ La función retorna una promesa (Promise) que resuelve a un arreglo (Array) de o
 const mdLinks = require('cloiw-md-links');
 
 
-mdLinks.mdLinks('./test_folder')
+mdLinks.mdLinks('./test_folder',{validate:false,stats:false})
   .then(res => {
     // => [{ href, text, file }]
   }).catch(err=>{
