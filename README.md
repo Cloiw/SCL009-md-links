@@ -82,9 +82,9 @@ mdLinks.mdLinks('./test_folder',{stats:true}).then(res => {
 
 ```sh
 $ md-links  ./test/md-files-test/test-file-1.md
-  test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown
- test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown
- test/md-files-test/test-file-1.md  https://docs.npmjs.com/getting-started/what-is-npm  NPM
+  ./test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown
+  ./test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown
+  ./test/md-files-test/test-file-1.md  https://docs.npmjs.com/getting-started/what-is-npm  NPM
 ```
 
 
@@ -98,7 +98,7 @@ URL que responde ok, entonces consideraremos el link como ok.
 
 ```sh
 $ md-links ./test/md-files-test/test-file-1.md --validate
-./test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown  200 OK
+ ./test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown  200 OK
  ./test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown  200 OK
  ./test/md-files-test/test-file-1.md  https://docs.npmjs.com/getting-started/what-is-npm  NPM  200 OK
 ```
@@ -111,7 +111,7 @@ Si pasamos la opción `--stats` el output será un texto con el total de links y
 ```sh
 $ md-links ./test/md-files-test/test-file-1.md --stats  
 Total Links: 3
-Unique Links: 1
+Unique Links: 2
 ```
 ##### `--stats` `--validate` 
 También podemos combinar `--stats` y `--validate` para obtener la cantidad de links buenos y rotos.
