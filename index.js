@@ -28,7 +28,8 @@ mdLinks.mdLinks(path,options).then(res=>{
   if(options.stats){
     return console.log("Total Links: "+ res.total+"\n"+"Unique Links: "+res.unique)
   }else{
-    return console.log(res)
+    const resLinks = res.map(x=>x.file+"  "+x.href+"  "+x.text.substr(0,40))
+    return console.log(resLinks.join("\n "))
   }
 }).catch(err=>{
   console.log(err.message)
