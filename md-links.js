@@ -66,16 +66,6 @@ const handleDirectory = (files) =>{
   return new Promise((resolve, reject)=>{
     let count = 0;
     let allLinks = []
-<<<<<<< HEAD
-      files.forEach(element => {
-        getLinks(element).then(singleLink =>{
-          count++
-          allLinks = allLinks.concat(singleLink)
-          if(count == files.length){
-            resolve(allLinks)
-          }
-        }).catch(err=>{
-=======
     files.forEach(element => {
       getLinks(element).then(singleLink =>{
         count++
@@ -84,7 +74,6 @@ const handleDirectory = (files) =>{
           resolve(allLinks)
         }
       }).catch(err=>{
->>>>>>> master
           reject(err)
         })
     })
@@ -122,10 +111,10 @@ const statsAndValidateLinks = (path) =>{
       }
       
       brokenLinks = totalLinks-okLinks
-      resolve(
-        "Total Links: "+totalLinks+"\n"+
-        "Ok Links: "+okLinks+"\n"+
-        "Broken Links: "+brokenLinks)
+      resolve({
+        "total":totalLinks,
+        "ok": okLinks,
+        "broken":brokenLinks})
     }).catch(err=>{
       reject(err)
     })
@@ -159,8 +148,8 @@ const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
   fileOrDirectoryLinks(path).then(links =>{
     const uniqueLinks = new Set(links.map(x=>x.href))
-    resolve("Total Links:"+links.length+"\n"+
-      "Unique Links:"+uniqueLinks.size)
+    resolve({"total":links.length,
+      "unique":uniqueLinks.size})
     }).catch(err=>{
       reject(err)
     })

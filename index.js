@@ -18,7 +18,18 @@ if(element == "--validate"){
 })
 
 mdLinks.mdLinks(path,options).then(res=>{
-  console.log(res)
+  if(options.validate && options.stats){
+    return console.log("Total Links: "+ res.total+"\n"+"Ok Links: "+res.ok+"\n"+"Broken Links: "+res.broken)
+  }
+  if(options.validate){
+    let validateLinks = res.map(x=>x.file+"  "+x.href+"  "+x.text.substr(0,40)+"  "+x.status)
+    return console.log(validateLinks.join("\n "))
+  }
+  if(options.stats){
+    return console.log("Total Links: "+ res.total+"\n"+"Unique Links: "+res.unique)
+  }else{
+    return console.log(res)
+  }
 }).catch(err=>{
   console.log(err.message)
 });
