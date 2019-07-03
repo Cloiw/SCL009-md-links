@@ -41,3 +41,11 @@ test("mdLinks, deberia entregar un mensaje de error al no encontrar una ruta val
       message: 'Ruta no valida'
   })
 })
+
+//error de argumentos
+test("mdLinks, deberia entregar un mensaje de error al no encontrar argumentos", async () =>{
+  await expect(mdLinks.mdLinks(null,null)).rejects.toMatchObject({
+      message: 'Faltan argumentos.'
+  })
+})
+
