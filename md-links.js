@@ -3,6 +3,7 @@ const marked = require('marked');
 const FileHound = require('filehound');
 const fetch = require('node-fetch');
 
+
 //leer archivos md de directorio
 const readingDirectory = (path =>{
   return new Promise((resolve,reject)=>{
@@ -157,7 +158,6 @@ return new Promise((resolve, reject) => {
 }
 //
 const mdLinks = (path, options) =>{
-
   if(!path || !options){
     return new Promise((resolve,reject)=>{
       reject(new Error ("Faltan argumentos"))

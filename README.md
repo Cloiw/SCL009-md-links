@@ -66,11 +66,11 @@ mdLinks.mdLinks('./test_folder',{validate:false,stats:false})
 })
 
 
-mdLinks.mdLinks('./test_folder',{validate:false,stats:true}).then(res => {
-   // => Total Links: Unique Links: ;
+mdLinks.mdLinks('./test_folder',{stats:true}).then(res => {
+   // => {total,unique}
 }).catch(err=>{
   console.log(err)
-})
+}) 
 ```
 
 ### CLI (Command Line Interface - Interfaz de Línea de Comando)
@@ -81,16 +81,10 @@ mdLinks.mdLinks('./test_folder',{validate:false,stats:true}).then(res => {
 
 
 ```sh
-$ md-links  example.md  
-[ { href: 'https://es.wikipedia.org/wiki/Markdown',
-    text: 'Markdown',
-    file: 'test/md-files-test/test-file-1.md' },
-  { href: 'https://es.wikipedia.org/wiki/Markdown',
-    text: 'Markdown',
-    file: 'test/md-files-test/test-file-1.md' },
-  { href: 'https://docs.npmjs.com/getting-started/what-is-npm',
-    text: 'NPM',
-    file: 'test/md-files-test/test-file-1.md' } ]
+$ md-links  ./test/md-files-test/test-file-1.md
+  test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown
+ test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown
+ test/md-files-test/test-file-1.md  https://docs.npmjs.com/getting-started/what-is-npm  NPM
 ```
 
 
@@ -103,19 +97,10 @@ averiguar si el link funciona o no. Si el link resulta en una redirección a una
 URL que responde ok, entonces consideraremos el link como ok.
 
 ```sh
-$ md-links ./some/example.md --validate
-[ { href: 'https://es.wikipedia.org/wiki/Markdown',
-    text: 'Markdown',
-    file: 'test/md-files-test/test-file-1.md',
-    status: '200 OK' },
-  { href: 'https://es.wikipedia.org/wiki/Markdown',
-    text: 'Markdown',
-    file: 'test/md-files-test/test-file-1.md',
-    status: '200 OK' },
-  { href: 'https://docs.npmjs.com/getting-started/what-is-npm',
-    text: 'NPM',
-    file: 'test/md-files-test/test-file-1.md',
-    status: '200 OK' } ]
+$ md-links ./test/md-files-test/test-file-1.md --validate
+./test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown  200 OK
+ ./test/md-files-test/test-file-1.md  https://es.wikipedia.org/wiki/Markdown  Markdown  200 OK
+ ./test/md-files-test/test-file-1.md  https://docs.npmjs.com/getting-started/what-is-npm  NPM  200 OK
 ```
 
 
@@ -124,7 +109,7 @@ $ md-links ./some/example.md --validate
 Si pasamos la opción `--stats` el output será un texto con el total de links y el total de links únicos.
 
 ```sh
-$ md-links example.md --stats
+$ md-links ./test/md-files-test/test-file-1.md --stats  
 Total Links: 3
 Unique Links: 1
 ```
@@ -132,7 +117,7 @@ Unique Links: 1
 También podemos combinar `--stats` y `--validate` para obtener la cantidad de links buenos y rotos.
 
 ```sh
-$ md-links example.md --stats --validate
+$ md-links ./test/md-files-test/test-file-1.md --stats  --validate
 Total Links: 3
 Ok Links: 3
 Broken Links: 0
