@@ -113,9 +113,9 @@ const statsAndValidateLinks = (path) =>{
       
       brokenLinks = totalLinks-okLinks
       resolve({
-        "total":totalLinks,
-        "ok": okLinks,
-        "broken":brokenLinks})
+        total:totalLinks,
+        ok: okLinks,
+        broken:brokenLinks})
     }).catch(err=>{
       reject(err)
     })
@@ -149,8 +149,8 @@ const statsLinks = (path) =>{
 return new Promise((resolve, reject) => { 
   fileOrDirectoryLinks(path).then(links =>{
     const uniqueLinks = new Set(links.map(x=>x.href))
-    resolve({"total":links.length,
-      "unique":uniqueLinks.size})
+    resolve({total:links.length,
+      unique:uniqueLinks.size})
     }).catch(err=>{
       reject(err)
     })
