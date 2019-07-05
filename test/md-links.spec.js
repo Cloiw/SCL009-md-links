@@ -4,12 +4,12 @@ const mdLinks = require('../md-links.js');
 
 //stats de un directorio
 test("mdLinks, deberia entregar un objeto con total: 7 y unique: 6 para la ruta test/md-files-test con stats true",  () =>{
-   expect(mdLinks.mdLinks("test/md-files-test",{stats:true})).resolves.toEqual({total:7,unique:6})
+   expect(mdLinks.mdLinks("test/md-files-test",{stats:true})).resolves.toEqual({"total":7,"unique":6})
 });
 
 //stats de un archivo
 test("mdLinks, deberia entregar un objeto con total: 3 y unique: 2 para el archivo test-file-1 con stats true",  () =>{
-  expect(mdLinks.mdLinks("test/md-files-test/test-file-1.md",{stats:true})).resolves.toEqual({total:3,unique:2})
+  expect(mdLinks.mdLinks("test/md-files-test/test-file-1.md",{stats:true})).resolves.toEqual({"total":3,"unique":2})
 });
 
 //stats y validate de un archivo

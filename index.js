@@ -33,7 +33,7 @@ mdLinks.mdLinks(path,options).then(res=>{
   }else{
     if(res.length === 0){
       return console.log("No se encontraron links")
-    }
+    } 
     const resLinks = res.map(x=>x.file+"  "+x.href+"  "+x.text.substr(0,40))
     return console.log(resLinks.join("\n "))
   }
